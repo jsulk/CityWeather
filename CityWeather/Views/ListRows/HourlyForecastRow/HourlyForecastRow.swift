@@ -16,13 +16,15 @@ struct HourlyForecastRow: View {
     }
     
     var body: some View {
-        HStack {
-            cityNameLabel
-            
-            Spacer()
-            
-            futureTemperatureLabel
-        }
+        NavigationLink(destination: CityWeatherDetailView(model: CityWeatherDetailViewModel(cityCurrentData: self.viewModel.cityCurrentData, cityHourlyData: self.viewModel.cityHourlyData)), label: {
+            HStack {
+                cityNameLabel
+                
+                Spacer()
+                
+                futureTemperatureLabel
+            }
+        })
     }
     
     @ViewBuilder

@@ -16,15 +16,17 @@ struct CurrentForecastRow: View {
     }
 
     var body: some View {
-        HStack {
-            Text(self.viewModel.cityName)
-            
-            Spacer()
-            
-            if let temp = self.viewModel.temp {
-                Text(temp)
+        NavigationLink(destination: CityWeatherDetailView(model: CityWeatherDetailViewModel(cityCurrentData: self.viewModel.cityCurrentData, cityHourlyData: self.viewModel.cityHourlyData)), label: {
+            HStack {
+                Text(self.viewModel.cityName)
+                
+                Spacer()
+                
+                if let temp = self.viewModel.temp {
+                    Text(temp)
+                }
             }
-        }
+        })
     }
 }
 

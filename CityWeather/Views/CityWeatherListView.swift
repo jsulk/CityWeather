@@ -22,21 +22,17 @@ struct CitiesWeatherListView: View {
     private let kHourly = "Hourly"
     private let kForecasts = "Forecasts"
     private let kCities = "Cities"
+    private let kNoSavedCitiesText = "You don't have any cities saved, yet!"
     private let kTabHorizontalPadding: CGFloat = 40
     private let kTabBottomPadding: CGFloat = 16
     
     var body: some View {
         NavigationView {
-            VStack {
-                if !storedCities.isEmpty {
-                    citiesListView
-                } else {
-                    ProgressView()
-                }
+            VStack(spacing: 0) {
+                citiesListView
                 
                 segmentedTab
             }
-            .background(AppConstants.Colors.accentColor)
             .navigationTitle(navTitle)
             .toolbar {
                 self.navigationButton
@@ -63,6 +59,7 @@ struct CitiesWeatherListView: View {
                 }
             }
         }
+        .background(Text("Empty"))
         .refreshable {
             await self.fetchData()
         }
@@ -70,13 +67,16 @@ struct CitiesWeatherListView: View {
     
     @ViewBuilder
     private var segmentedTab: some View {
-        Picker("Current/Hourly", selection: $isShowingCurrentForecast) {
-            Text(kCurrent).tag(true)
-            Text(kHourly).tag(false)
+        VStack {
+            Picker("Current/Hourly", selection: $isShowingCurrentForecast) {
+                Text(kCurrent).tag(true)
+                Text(kHourly).tag(false)
+            }
+            .pickerStyle(.segmented)
+            .padding(.horizontal, kTabHorizontalPadding)
+            .padding(.vertical, kTabBottomPadding)
         }
-        .pickerStyle(.segmented)
-        .padding(.horizontal, kTabHorizontalPadding)
-        .padding(.bottom, kTabBottomPadding)
+        .background(AppConstants.Colors.accentColor)
     }
     
     @ViewBuilder
