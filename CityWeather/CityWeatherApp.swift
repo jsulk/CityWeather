@@ -9,9 +9,13 @@ import SwiftUI
 
 @main
 struct CityWeatherApp: App {
+    
+    @StateObject private var persistentDataManager = PersistentDataManager()
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            CitiesWeatherListView()
+                .environment(\.managedObjectContext, persistentDataManager.cityContainer.viewContext)
         }
     }
 }
