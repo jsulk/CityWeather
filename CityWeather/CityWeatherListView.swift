@@ -33,7 +33,7 @@ struct CitiesWeatherListView: View {
     
     @ViewBuilder
     var navigationButton: some View {
-        NavigationLink(destination: CitiesListView()) {
+        NavigationLink(destination: CityListView()) {
             Text("Cities")
         }
     }

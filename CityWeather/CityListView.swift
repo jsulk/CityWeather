@@ -1,5 +1,5 @@
 //
-//  CitiesListView.swift
+//  CityListView.swift
 //  CityWeather
 //
 //  Created by Jake Sulkoske on 4/2/22.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct CitiesListView: View {
+struct CityListView: View {
     
     @State private var showingDetail = false
     
@@ -42,6 +42,6 @@ struct CitiesListView: View {
 
 struct CitiesListView_Previews: PreviewProvider {
     static var previews: some View {
-        CitiesListView()
+        CityListView()
     }
 }
