@@ -7,9 +7,10 @@
 
 import SwiftUI
 
-import SwiftUI
-
 struct CitiesWeatherListView: View {
+    
+    @Environment(\.managedObjectContext) var context
+    @FetchRequest(sortDescriptors: [SortDescriptor(\.name)]) var storedCities: FetchedResults<City>
     
     var body: some View {
         NavigationView {
@@ -25,9 +26,10 @@ struct CitiesWeatherListView: View {
     
     @ViewBuilder
     private var citiesListView: some View {
-        List {
-            Text("City 1")
-            Text("City 2")
+        List(storedCities) { city in
+            if let cityName = city.name {
+                Text(cityName)
+            }
         }
     }
     
