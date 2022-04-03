@@ -13,7 +13,7 @@ public struct CityWeatherDataManager {
     fileprivate let kBaseWeatherDataURL: String = "https://api.openweathermap.org/geo/1.0/direct?q="
     fileprivate let kAPIKey: String = "e1c77c38575299ac5173f878ef44ac6a"
     
-    public func getCityCurrentWeatherData(city: City) async -> CityCurrentData? {
+    public func getCityCurrentWeatherDataFromCoordinates(city: City) async -> CityCurrentData? {
         let kCurrentWeatherBaseURL: String = "\(kBaseWeatherEndpoint)weather?lat="
         guard let url = URL(string: "\(kCurrentWeatherBaseURL)\(city.lat)&lon=\(city.lon)&appid=\(kAPIKey)&units=imperial") else { return nil }
         do {
@@ -33,7 +33,7 @@ public struct CityWeatherDataManager {
         return nil
     }
     
-    public func getCityHourlyWeatherData(city: City) async -> CityHourlyData? {
+    public func getCityHourlyWeatherDataFromCoordinates(city: City) async -> CityHourlyData? {
         let kHourlyWeatherBaseURL: String = "\(kBaseWeatherEndpoint)forecast?lat="
         guard let url = URL(string: "\(kHourlyWeatherBaseURL)\(city.lat)&lon=\(city.lon)&appid=\(kAPIKey)&units=imperial") else { return nil }
         do {
@@ -54,7 +54,7 @@ public struct CityWeatherDataManager {
         return nil
     }
 
-    func getCityData(cityString: String, completion: @escaping (CityData?) -> Void) async {
+    func getCityDataFromCityNameString(cityString: String, completion: @escaping (CityData?) -> Void) async {
         
         guard let formattedCityString = cityString.formatAsURL() else {
             completion(nil)

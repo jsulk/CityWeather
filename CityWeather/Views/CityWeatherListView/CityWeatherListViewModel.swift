@@ -37,8 +37,8 @@ extension CityWeatherListView {
             for city in storedCities {
                 if let cityId = city.id,
                    currentCityWeatherData[cityId] == nil {
-                    let currentWeatherData = await dataManager.getCityCurrentWeatherData(city: city)
-                    let hourlyWeatherData = await dataManager.getCityHourlyWeatherData(city: city)
+                    let currentWeatherData = await dataManager.getCityCurrentWeatherDataFromCoordinates(city: city)
+                    let hourlyWeatherData = await dataManager.getCityHourlyWeatherDataFromCoordinates(city: city)
                     DispatchQueue.main.async {
                         self.currentCityWeatherData[cityId] = currentWeatherData
                         self.hourlyCityWeatherData[cityId] = hourlyWeatherData
