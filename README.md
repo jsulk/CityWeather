@@ -6,6 +6,10 @@ This project is intended to be the coding exam for SimplePractice.
 - Language: SwiftUI
 - Architecture: MVVM
 
+## Key Notes
+- The “GooglePlaces” pod did not appear to be written out for friendly use with SwiftUI, so I ended up creating this functionality natively.
+- In order to fulfill the requirement of working with Cocoapods, I integrated the lottie-ios pod to spice up the Forecast detail screen.
+
 ## Requirements: 
 
 Forecast Screen
@@ -39,6 +43,3 @@ Cocoapods
 
 # Installing
 CityWeather master branch
-
-# Key Notes
-- The “GooglePlaces” pod did not appear to be written out for friendly use with SwiftUI, so I ended up creating this functionality natively.
