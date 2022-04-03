@@ -16,6 +16,7 @@ struct CityListView: View {
     private var kNoCities: String = "You don't have any cities saved, yet. Try adding one by tapping the Add City button!"
     private var kSavedCities: String = "Saved Cities"
     private var kAddCity: String = "Add City"
+    private var kHorizontalPadding: CGFloat = 40
     
     var body: some View {
         cityList
@@ -41,9 +42,11 @@ struct CityListView: View {
                         Text(cityName)
                     }
                 }
+                .onDelete(perform: deleteCityFromStorage)
             }
         } else {
             Text(kNoCities)
+                .padding(.horizontal, kHorizontalPadding)
         }
     }
     
@@ -55,6 +58,14 @@ struct CityListView: View {
         .sheet(isPresented: $showingDetail) {
             AddCityView()
         }
+    }
+    
+    private func deleteCityFromStorage(at offsets: IndexSet) {
+        for offset in offsets {
+            let city = storedCities[offset]
+            context.delete(city)
+        }
+        try? context.save()
     }
 }
 
