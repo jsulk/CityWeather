@@ -21,5 +21,14 @@ extension CityWeatherDetailView {
         var cityName: String {
             self.cityCurrentData.cityName
         }
+        
+        var animationName: String {
+            guard let temp = cityCurrentData.currentData.main?.temp else { return "" }
+            if Int(temp) > 60 {
+                return "hot"
+            } else {
+                return "cold"
+            }
+        }
     }
 }
