@@ -10,7 +10,7 @@ import Foundation
 public struct CityWeatherDataManager {
     
     private let kBaseWeatherDataURL: String = "https://api.openweathermap.org/geo/1.0/direct?q="
-    private let kWeatherDataAppId: String = "1c77c38575299ac5173f878ef44ac6a"
+    private let kWeatherDataAppId: String = "e1c77c38575299ac5173f878ef44ac6a"
 
     func getCityData(cityString: String, completion: @escaping (CityData?) -> Void) async {
         

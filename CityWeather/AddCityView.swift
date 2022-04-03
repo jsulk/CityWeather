@@ -50,13 +50,6 @@ struct AddCityView: View {
         })
     }
     
-    private func getCityDataForSelectedCityString(_ result:String) async {
-        await dataManager.getCityData(cityString:result, completion: { city in
-            self.addCityToAppStorage(city: city)
-            presentationMode.wrappedValue.dismiss()
-        })
-    }
-    
     private func updateSearchResults(value: String) async {
         if !value.isEmpty {
             self.searchResults = []
@@ -64,6 +57,13 @@ struct AddCityView: View {
         } else {
             searchResults = []
         }
+    }
+    
+    private func getCityDataForSelectedCityString(_ result:String) async {
+        await dataManager.getCityData(cityString:result, completion: { city in
+            self.addCityToAppStorage(city: city)
+            presentationMode.wrappedValue.dismiss()
+        })
     }
     
     private func addCityToAppStorage(city: CityData?) {
