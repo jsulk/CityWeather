@@ -69,6 +69,9 @@ struct CitiesWeatherListView: View {
                 }
             }
         }
+        .refreshable {
+            await self.fetchData()
+        }
     }
     
     @ViewBuilder
