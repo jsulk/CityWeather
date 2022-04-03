@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Lottie
 
 struct CityWeatherDetailView: View {
     
@@ -17,6 +18,9 @@ struct CityWeatherDetailView: View {
     
     var body: some View {
         weatherDataDetailList
+        LottieView(animationName: viewModel.animationName,
+                           loopMode: .loop,
+                           contentMode: .scaleAspectFit)
     }
     
     @ViewBuilder
