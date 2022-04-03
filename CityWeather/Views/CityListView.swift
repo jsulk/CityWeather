@@ -13,10 +13,10 @@ struct CityListView: View {
     @FetchRequest(sortDescriptors: [SortDescriptor(\.name)]) var storedCities: FetchedResults<City>
     @State private var showingDetail = false
     
-    private var kNoCities: String = "You don't have any cities saved, yet. Try adding one by tapping the Add City button!"
+    private var kNoCities: String = "Add a city by tapping the Add City button!"
     private var kSavedCities: String = "Saved Cities"
     private var kAddCity: String = "Add City"
-    private var kHorizontalPadding: CGFloat = 40
+    private var kHorizontalPadding: CGFloat = 16
     
     var body: some View {
         cityList

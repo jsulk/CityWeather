@@ -59,9 +59,18 @@ struct CitiesWeatherListView: View {
                 }
             }
         }
-        .background(Text("Empty"))
+        .overlay(Group {
+            listViewOverlay
+        })
         .refreshable {
             await self.fetchData()
+        }
+    }
+    
+    @ViewBuilder
+    private var listViewOverlay: some View {
+        if storedCities.isEmpty {
+            Text(kNoSavedCitiesText)
         }
     }
     
