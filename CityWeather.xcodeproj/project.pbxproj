@@ -21,6 +21,8 @@
 		DE631EE827F9F75A008CD844 /* City.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = DE631EE627F9F75A008CD844 /* City.xcdatamodeld */; };
 		DE631EEA27F9F88A008CD844 /* PersistentDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE631EE927F9F88A008CD844 /* PersistentDataManager.swift */; };
 		DE631EFD27FA0107008CD844 /* ExtensionHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE631EFC27FA0107008CD844 /* ExtensionHelperTests.swift */; };
+		DE631EFF27FA15C2008CD844 /* CityWeatherData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE631EFE27FA15C2008CD844 /* CityWeatherData.swift */; };
+		DE631F0127FA15E2008CD844 /* AppConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE631F0027FA15E2008CD844 /* AppConstants.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,6 +52,8 @@
 		DE631EE927F9F88A008CD844 /* PersistentDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistentDataManager.swift; sourceTree = "<group>"; };
 		DE631EF327FA009E008CD844 /* CityWeatherTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CityWeatherTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DE631EFC27FA0107008CD844 /* ExtensionHelperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionHelperTests.swift; sourceTree = "<group>"; };
+		DE631EFE27FA15C2008CD844 /* CityWeatherData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityWeatherData.swift; sourceTree = "<group>"; };
+		DE631F0027FA15E2008CD844 /* AppConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConstants.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -133,6 +137,7 @@
 		DE631EDA27F9585F008CD844 /* DataModels */ = {
 			isa = PBXGroup;
 			children = (
+				DE631EFE27FA15C2008CD844 /* CityWeatherData.swift */,
 				DE631EDD27F9F33F008CD844 /* SearchResults.swift */,
 				DE631EE127F9F3A0008CD844 /* CityData.swift */,
 				DE631EE627F9F75A008CD844 /* City.xcdatamodeld */,
@@ -144,6 +149,7 @@
 			isa = PBXGroup;
 			children = (
 				DE631EE427F9F485008CD844 /* StringExtensions.swift */,
+				DE631F0027FA15E2008CD844 /* AppConstants.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -263,8 +269,10 @@
 				DE631EE027F9F36B008CD844 /* CityWeatherDataManager.swift in Sources */,
 				DE631EE227F9F3A0008CD844 /* CityData.swift in Sources */,
 				DE631ED327F954E1008CD844 /* CityListView.swift in Sources */,
+				DE631EFF27FA15C2008CD844 /* CityWeatherData.swift in Sources */,
 				DE631EEA27F9F88A008CD844 /* PersistentDataManager.swift in Sources */,
 				DE631EDE27F9F33F008CD844 /* SearchResults.swift in Sources */,
+				DE631F0127FA15E2008CD844 /* AppConstants.swift in Sources */,
 				DE631EE827F9F75A008CD844 /* City.xcdatamodeld in Sources */,
 				DE631EB827F93544008CD844 /* CityWeatherApp.swift in Sources */,
 			);

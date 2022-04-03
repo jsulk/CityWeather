@@ -12,14 +12,38 @@ struct CitiesWeatherListView: View {
     @Environment(\.managedObjectContext) var context
     @FetchRequest(sortDescriptors: [SortDescriptor(\.name)]) var storedCities: FetchedResults<City>
     
+    @State private var isShowingCurrentForecast: Bool = true
+    @State private var currentCityWeatherData: [UUID:CityCurrentData] = [:]
+    @State private var hourlyCityWeatherData: [UUID:CityHourlyData] = [:]
+    
+    private let dataManager = CityWeatherDataManager()
+    
+    private let kCurrent = "Current"
+    private let kHourly = "Hourly"
+    private let kForecasts = "Forecasts"
+    private let kCities = "Cities"
+    
     var body: some View {
         NavigationView {
             VStack {
-                citiesListView
+                if !storedCities.isEmpty {
+                    citiesListView
+                } else {
+                    ProgressView()
+                }
+                
+                segmentedTab
             }
-            .navigationTitle("Forecasts")
+            .background(AppConstants.Colors.accentColor)
+            .navigationTitle(navTitle)
             .toolbar {
                 self.navigationButton
+            }
+        }
+        .accentColor(AppConstants.Colors.accentColor)
+        .onAppear {
+            Task.init {
+                await fetchData()
             }
         }
     }
@@ -27,16 +51,57 @@ struct CitiesWeatherListView: View {
     @ViewBuilder
     private var citiesListView: some View {
         List(storedCities) { city in
-            if let cityName = city.name {
-                Text(cityName)
+            if let cityId =  city.id,
+               let currentCityData = currentCityWeatherData[cityId],
+               let hourlyCityData = hourlyCityWeatherData[cityId] {
+                HStack {
+                    Text(currentCityData.cityName)
+                    VStack {
+                        if isShowingCurrentForecast {
+                            Text("\(currentCityData.currentData.main?.temp ?? 0)")
+                        } else {
+                            VStack {
+                                Text("\(hourlyCityData.hourlyData.list[0].main?.temp ?? 0)")
+                                Text("\(hourlyCityData.hourlyData.list[0].dt_txt ?? "")")
+                            }
+                        }
+                    }
+                }
             }
         }
     }
     
     @ViewBuilder
-    var navigationButton: some View {
+    private var segmentedTab: some View {
+        Picker("Current/Hourly", selection: $isShowingCurrentForecast) {
+            Text(kCurrent).tag(true)
+            Text(kHourly).tag(false)
+        }
+        .pickerStyle(.segmented)
+        .padding(.horizontal, 40)
+    }
+    
+    @ViewBuilder
+    private var navigationButton: some View {
         NavigationLink(destination: CityListView()) {
-            Text("Cities")
+            Text(kCities)
+        }
+    }
+    
+    private var navTitle: String {
+        if isShowingCurrentForecast {
+            return kCurrent
+        } else {
+            return kForecasts
+        }
+    }
+    
+    private func fetchData() async {
+        for city in storedCities {
+            if let cityId = city.id {
+                currentCityWeatherData[cityId] = await dataManager.getCityCurrentWeatherData(city: city)
+                hourlyCityWeatherData[cityId] = await dataManager.getCityHourlyWeatherData(city: city)
+            }
         }
     }
 }

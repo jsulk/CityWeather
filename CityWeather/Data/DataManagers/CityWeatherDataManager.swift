@@ -9,8 +9,50 @@ import Foundation
 
 public struct CityWeatherDataManager {
     
-    private let kBaseWeatherDataURL: String = "https://api.openweathermap.org/geo/1.0/direct?q="
-    private let kWeatherDataAppId: String = "e1c77c38575299ac5173f878ef44ac6a"
+    fileprivate let kBaseWeatherEndpoint: String = "https://api.openweathermap.org/data/2.5/"
+    fileprivate let kBaseWeatherDataURL: String = "https://api.openweathermap.org/geo/1.0/direct?q="
+    fileprivate let kAPIKey: String = "e1c77c38575299ac5173f878ef44ac6a"
+    
+    public func getCityCurrentWeatherData(city: City) async -> CityCurrentData? {
+        let kCurrentWeatherBaseURL: String = "\(kBaseWeatherEndpoint)weather?lat="
+        guard let url = URL(string: "\(kCurrentWeatherBaseURL)\(city.lat)&lon=\(city.lon)&appid=\(kAPIKey)&units=imperial") else { return nil }
+        do {
+            let (data, _) = try await URLSession.shared.data(from: url)
+            if let weatherData = try? JSONDecoder().decode(WeatherData.self, from: data) {
+                if let cityName = city.name {
+                    let weatherData = CityCurrentData(cityName: cityName, currentData: WeatherData(weather: weatherData.weather, main: weatherData.main, wind: weatherData.wind))
+                    return weatherData
+                }
+            } else {
+                //Couldn't parse response
+                print("FAILED")
+            }
+        } catch {
+            print("INVALID DATA")
+        }
+        return nil
+    }
+    
+    public func getCityHourlyWeatherData(city: City) async -> CityHourlyData? {
+        let kHourlyWeatherBaseURL: String = "\(kBaseWeatherEndpoint)forecast?lat="
+        guard let url = URL(string: "\(kHourlyWeatherBaseURL)\(city.lat)&lon=\(city.lon)&appid=\(kAPIKey)&units=imperial") else { return nil }
+        do {
+            let (data, _) = try await URLSession.shared.data(from: url)
+            if let weatherData = try? JSONDecoder().decode(HourlyWeatherData.self, from: data) {
+                if let cityName = city.name {
+                    let weatherData = CityHourlyData(cityName: cityName, hourlyData: HourlyWeatherData(list: weatherData.list))
+                    return weatherData
+                }
+            } else {
+                //Couldn't parse response
+                print("HERE")
+            }
+        } catch {
+            print("INVALID DATA")
+        }
+        
+        return nil
+    }
 
     func getCityData(cityString: String, completion: @escaping (CityData?) -> Void) async {
         
@@ -18,7 +60,7 @@ public struct CityWeatherDataManager {
             completion(nil)
             return
         }
-        let urlString: String = "\(kBaseWeatherDataURL)\(formattedCityString)&limit=5&appid=\(kWeatherDataAppId)"
+        let urlString: String = "\(kBaseWeatherDataURL)\(formattedCityString)&limit=5&appid=\(kAPIKey)"
         guard let url = URL(string: urlString) else { return }
        
         do {
