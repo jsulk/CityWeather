@@ -34,16 +34,16 @@ struct CitiesWeatherListView: View {
                 segmentedTab
             }
             .navigationTitle(navTitle)
+            .onAppear {
+                Task.init {
+                    await fetchData()
+                }
+            }
             .toolbar {
                 self.navigationButton
             }
         }
         .accentColor(AppConstants.Colors.accentColor)
-        .onAppear {
-            Task.init {
-                await fetchData()
-            }
-        }
     }
     
     @ViewBuilder
@@ -105,7 +105,8 @@ struct CitiesWeatherListView: View {
     
     private func fetchData() async {
         for city in storedCities {
-            if let cityId = city.id {
+            if let cityId = city.id,
+               currentCityWeatherData[cityId] == nil {
                 currentCityWeatherData[cityId] = await dataManager.getCityCurrentWeatherData(city: city)
                 hourlyCityWeatherData[cityId] = await dataManager.getCityHourlyWeatherData(city: city)
             }
