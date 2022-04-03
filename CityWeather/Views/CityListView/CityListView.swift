@@ -11,23 +11,14 @@ struct CityListView: View {
     
     @Environment(\.managedObjectContext) var context
     @FetchRequest(sortDescriptors: [SortDescriptor(\.name)]) var storedCities: FetchedResults<City>
-    @State private var showingDetail = false
     
-    private var kNoCities: String = "You don't have any cities saved, yet. Try adding one by tapping the Add City button!"
-    private var kSavedCities: String = "Saved Cities"
-    private var kAddCity: String = "Add City"
-    private var kHorizontalPadding: CGFloat = 40
+    @StateObject var viewModel = ViewModel()
     
     var body: some View {
-        cityList
-    }
-    
-    @ViewBuilder
-    private var cityList: some View {
         VStack {
             savedCitiesListView
         }
-        .navigationTitle(kSavedCities)
+        .navigationTitle(viewModel.kSavedCities)
         .toolbar {
             self.addCityNavButton
         }
@@ -45,17 +36,17 @@ struct CityListView: View {
                 .onDelete(perform: deleteCityFromStorage)
             }
         } else {
-            Text(kNoCities)
-                .padding(.horizontal, kHorizontalPadding)
+            Text(viewModel.kNoCities)
+                .padding(.horizontal, viewModel.kHorizontalPadding)
         }
     }
     
     @ViewBuilder
     private var addCityNavButton: some View {
-        Button(kAddCity) {
-            showingDetail = true
+        Button(viewModel.kAddCity) {
+            viewModel.showingDetail = true
         }
-        .sheet(isPresented: $showingDetail) {
+        .sheet(isPresented: $viewModel.showingDetail) {
             AddCityView()
         }
     }

@@ -14,7 +14,7 @@ struct CityWeatherApp: App {
     
     var body: some Scene {
         WindowGroup {
-            CitiesWeatherListView()
+            CityWeatherListView()
                 .environment(\.managedObjectContext, persistentDataManager.cityContainer.viewContext)
         }
     }
