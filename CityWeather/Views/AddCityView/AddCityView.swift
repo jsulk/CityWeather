@@ -12,11 +12,9 @@ struct AddCityView: View {
     @Environment(\.managedObjectContext) var context
     @Environment(\.presentationMode) var presentationMode
     
-    @State private var searchResults: [String]?
-    @State private var input: String = ""
+    @StateObject var viewModel = ViewModel()
     
     private let dataManager = CityWeatherDataManager()
-    private let googlePlaceDataManager = GooglePlacesDataManager()
     
     public init() {}
     
@@ -31,7 +29,7 @@ struct AddCityView: View {
     @ViewBuilder
     private var searchableListView: some View {
         List {
-            if let results = searchResults {
+            if let results = viewModel.searchResults {
                 ForEach(results, id: \.self) { result in
                     Button(result) {
                         Task.init {
@@ -42,27 +40,20 @@ struct AddCityView: View {
                 }
             }
         }
-        .searchable(text: $input)
-        .onChange(of: input, perform: { value in
+        .searchable(text: $viewModel.input)
+        .onChange(of: viewModel.input, perform: { value in
             Task.init(operation: {
-                await self.updateSearchResults(value: value)
+                await viewModel.updateSearchResults(value: value)
             })
         })
-    }
-    
-    private func updateSearchResults(value: String) async {
-        if !value.isEmpty {
-            self.searchResults = []
-            self.searchResults = await googlePlaceDataManager.getSearchResults(input: input)
-        } else {
-            searchResults = []
-        }
     }
     
     private func getCityDataForSelectedCityString(_ result:String) async {
         await dataManager.getCityData(cityString:result, completion: { city in
             self.addCityToAppStorage(city: city)
-            presentationMode.wrappedValue.dismiss()
+            DispatchQueue.main.async {
+                presentationMode.wrappedValue.dismiss()
+            }
         })
     }
     

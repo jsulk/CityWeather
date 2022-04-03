@@ -7,24 +7,27 @@
 
 import Foundation
 
-public final class CurrentForecastRowModel {
+extension CurrentForecastRow {
     
-    var cityCurrentData: CityCurrentData
-    var cityHourlyData: CityHourlyData
-    
-    public init(cityCurrentData: CityCurrentData, cityHourlyData: CityHourlyData) {
-        self.cityCurrentData = cityCurrentData
-        self.cityHourlyData = cityHourlyData
-    }
-    
-    var cityName: String {
-        self.cityCurrentData.cityName
-    }
-    
-    var temp: String? {
-        if let temp = cityCurrentData.currentData.main?.temp {
-            return "\(Int(temp))\(AppConstants.kDegreeSymbol)"
+    class ViewModel: ObservableObject {
+        
+        var cityCurrentData: CityCurrentData
+        var cityHourlyData: CityHourlyData
+        
+        public init(cityCurrentData: CityCurrentData, cityHourlyData: CityHourlyData) {
+            self.cityCurrentData = cityCurrentData
+            self.cityHourlyData = cityHourlyData
         }
-        return nil
+        
+        var cityName: String {
+            self.cityCurrentData.cityName
+        }
+        
+        var temp: String? {
+            if let temp = cityCurrentData.currentData.main?.temp {
+                return "\(Int(temp))\(AppConstants.kDegreeSymbol)"
+            }
+            return nil
+        }
     }
 }

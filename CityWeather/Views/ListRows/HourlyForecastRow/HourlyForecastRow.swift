@@ -9,14 +9,14 @@ import SwiftUI
 
 struct HourlyForecastRow: View {
     
-    private var viewModel: HourlyForecastRowModel
+    private var viewModel: ViewModel
     
-    public init(model: HourlyForecastRowModel) {
+    public init(model: ViewModel) {
         self.viewModel = model
     }
     
     var body: some View {
-        NavigationLink(destination: CityWeatherDetailView(model: CityWeatherDetailViewModel(cityCurrentData: self.viewModel.cityCurrentData, cityHourlyData: self.viewModel.cityHourlyData)), label: {
+        NavigationLink(destination: CityWeatherDetailView(model: CityWeatherDetailView.ViewModel(cityCurrentData: self.viewModel.cityCurrentData, cityHourlyData: self.viewModel.cityHourlyData)), label: {
             HStack {
                 cityNameLabel
                 
@@ -46,6 +46,6 @@ struct HourlyForecastRow: View {
 
 struct HourlyForecastRow_Previews: PreviewProvider {
     static var previews: some View {
-        HourlyForecastRow(model: HourlyForecastRowModel(cityCurrentData: CityCurrentData(cityName: "Los Angeles", currentData: WeatherData(weather: [WeatherOverview(id: 0, main: "Rainy", description: "You're going to need an umbrella")], main: Temperature(temp: 0.0, feels_like: 0.0, temp_min: 0.0, temp_max: 0.0), wind: Wind(speed: 0.0, deg: 21))), cityHourlyData: CityHourlyData(cityName: "Los Angeles", hourlyData: HourlyWeatherData(list: [WeatherData(weather: [WeatherOverview(id: 0, main: "Rainy", description: "You're going to need an umbrella")], main: Temperature(temp: 0.0, feels_like: 0.0, temp_min: 0.0, temp_max: 0.0), wind: Wind(speed: 0.0, deg: 21))]))))
+        HourlyForecastRow(model: HourlyForecastRow.ViewModel(cityCurrentData: CityCurrentData(cityName: "Los Angeles", currentData: WeatherData(weather: [WeatherOverview(id: 0, main: "Rainy", description: "You're going to need an umbrella")], main: Temperature(temp: 0.0, feels_like: 0.0, temp_min: 0.0, temp_max: 0.0), wind: Wind(speed: 0.0, deg: 21))), cityHourlyData: CityHourlyData(cityName: "Los Angeles", hourlyData: HourlyWeatherData(list: [WeatherData(weather: [WeatherOverview(id: 0, main: "Rainy", description: "You're going to need an umbrella")], main: Temperature(temp: 0.0, feels_like: 0.0, temp_min: 0.0, temp_max: 0.0), wind: Wind(speed: 0.0, deg: 21))]))))
     }
 }
