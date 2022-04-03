@@ -6,7 +6,7 @@ This project is intended to be the coding exam for SimplePractice.
 - Language: SwiftUI
 - Architecture: MVVM
 
-Requirements: 
+## Requirements: 
 
 Forecast Screen
 1. Have two tabs for “Current” and “Hourly” forecast by city
@@ -35,7 +35,7 @@ Add City Screen
 
 # Getting Started
 ## Dependencies
-Cocopods 
+Cocoapods 
 
 # Installing
 CityWeather master branch
