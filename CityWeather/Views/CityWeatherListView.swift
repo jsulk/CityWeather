@@ -22,6 +22,8 @@ struct CitiesWeatherListView: View {
     private let kHourly = "Hourly"
     private let kForecasts = "Forecasts"
     private let kCities = "Cities"
+    private let kTabHorizontalPadding: CGFloat = 40
+    private let kTabBottomPadding: CGFloat = 16
     
     var body: some View {
         NavigationView {
@@ -54,18 +56,10 @@ struct CitiesWeatherListView: View {
             if let cityId =  city.id,
                let currentCityData = currentCityWeatherData[cityId],
                let hourlyCityData = hourlyCityWeatherData[cityId] {
-                HStack {
-                    Text(currentCityData.cityName)
-                    VStack {
-                        if isShowingCurrentForecast {
-                            Text("\(currentCityData.currentData.main?.temp ?? 0)")
-                        } else {
-                            VStack {
-                                Text("\(hourlyCityData.hourlyData.list[0].main?.temp ?? 0)")
-                                Text("\(hourlyCityData.hourlyData.list[0].dt_txt ?? "")")
-                            }
-                        }
-                    }
+                if isShowingCurrentForecast {
+                    CurrentForecastRow(model: CurrentForecastRowModel(cityCurrentData: currentCityData, cityHourlyData: hourlyCityData))
+                } else {
+                    HourlyForecastRow(model: HourlyForecastRowModel(cityCurrentData: currentCityData, cityHourlyData: hourlyCityData))
                 }
             }
         }
@@ -81,7 +75,8 @@ struct CitiesWeatherListView: View {
             Text(kHourly).tag(false)
         }
         .pickerStyle(.segmented)
-        .padding(.horizontal, 40)
+        .padding(.horizontal, kTabHorizontalPadding)
+        .padding(.bottom, kTabBottomPadding)
     }
     
     @ViewBuilder
