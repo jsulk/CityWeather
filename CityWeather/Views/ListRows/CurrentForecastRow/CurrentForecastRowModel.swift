@@ -25,7 +25,14 @@ extension CurrentForecastRow {
         
         var temp: String? {
             if let temp = cityCurrentData.currentData.main?.temp {
-                return "\(Int(temp))\(AppConstants.kDegreeSymbol)"
+                return "Temp: \(Int(temp))\(AppConstants.kDegreeSymbol)"
+            }
+            return nil
+        }
+        
+        var wind: String? {
+            if let wind = cityCurrentData.currentData.wind?.speed {
+                return "Wind: \(Int(wind))mph"
             }
             return nil
         }

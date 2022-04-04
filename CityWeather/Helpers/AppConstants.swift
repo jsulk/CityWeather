@@ -13,5 +13,5 @@ public struct AppConstants {
         public static let accentColor: Color = Color(red: 139/255, green: 194/255, blue: 133/255)
     }
     
-    public static let kDegreeSymbol: String = "°"
+    public static let kDegreeSymbol: String = "°F"
 }

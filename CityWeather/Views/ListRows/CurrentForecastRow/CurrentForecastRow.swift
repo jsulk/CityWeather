@@ -22,11 +22,27 @@ struct CurrentForecastRow: View {
                 
                 Spacer()
                 
-                if let temp = self.viewModel.temp {
-                    Text(temp)
+                VStack {
+                    windLabel
+                    
+                    tempLabel
                 }
             }
         })
+    }
+    
+    @ViewBuilder
+    private var tempLabel: some View {
+        if let temp = self.viewModel.temp {
+            Text(temp)
+        }
+    }
+    
+    @ViewBuilder
+    private var windLabel: some View {
+        if let wind = self.viewModel.wind {
+            Text(wind)
+        }
     }
 }
 
