@@ -8,6 +8,7 @@ This project is intended to be the coding exam for SimplePractice.
 
 ## Key Notes
 - The “GooglePlaces” pod did not appear to be written out for friendly use with SwiftUI, so I ended up creating this functionality natively.
+- The "Hourly" call for openweathermap was behind a paywall, so I used the 5 day forecase call instead.
 - In order to fulfill the requirement of working with Cocoapods, I integrated the lottie-ios pod to spice up the Forecast detail screen.
 
 ## Requirements: 
