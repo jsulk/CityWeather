@@ -9,12 +9,9 @@ import SwiftUI
 
 struct AddCityView: View {
     
-    @Environment(\.managedObjectContext) var context
     @Environment(\.presentationMode) var presentationMode
     
     @StateObject var viewModel = ViewModel()
-    
-    private let dataManager = CityWeatherDataManager()
     
     public init() {}
     
