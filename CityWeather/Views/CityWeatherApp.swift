@@ -10,12 +10,16 @@ import SwiftUI
 @main
 struct CityWeatherApp: App {
     
-    @StateObject private var persistentDataManager = PersistentDataManager()
+    @Environment(\.scenePhase) var scenePhase
+    let persistenceController = PersistenceController.shared
     
     var body: some Scene {
         WindowGroup {
             CityWeatherListView()
-                .environment(\.managedObjectContext, persistentDataManager.cityContainer.viewContext)
+                .environment(\.managedObjectContext, persistenceController.container.viewContext)
+        }
+        .onChange(of: scenePhase) { _ in
+            persistenceController.save()
         }
     }
 }
