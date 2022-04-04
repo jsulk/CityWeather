@@ -20,6 +20,9 @@ struct AddCityView: View {
             VStack {
                 searchableListView
             }
+            .alert(isPresented: viewModel.isPresentingAlert, content: {
+                Alert(localizedError: viewModel.activeError!)
+            })
         }
     }
     
@@ -42,9 +45,9 @@ struct AddCityView: View {
             }
         }
         .searchable(text: $viewModel.input)
-        .onChange(of: viewModel.input, perform: { value in
+        .onChange(of: viewModel.input, perform: { input in
             Task.init(operation: {
-                await viewModel.updateSearchResults(value: value)
+                await viewModel.updateSearchResults(value: input)
             })
         })
     }
