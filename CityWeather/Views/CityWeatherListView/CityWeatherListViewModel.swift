@@ -75,7 +75,6 @@ extension CityWeatherListView {
                         self.hourlyCityWeatherData[cityId] = hourlyData
                     }
                 }
-                
             })
         }
     }

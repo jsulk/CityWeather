@@ -168,8 +168,8 @@
 				DE631ED827F95850008CD844 /* Data */,
 				DE631F0227FA1981008CD844 /* Views */,
 				DE0200D227FA597900BDC0EF /* LottieAnimations */,
-				DE631EBB27F93547008CD844 /* Assets.xcassets */,
 				DE631EBD27F93547008CD844 /* Preview Content */,
+				DE631EBB27F93547008CD844 /* Assets.xcassets */,
 			);
 			path = CityWeather;
 			sourceTree = "<group>";
