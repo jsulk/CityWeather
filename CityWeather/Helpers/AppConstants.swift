@@ -14,7 +14,7 @@ public struct AppConstants {
     }
     
     public static let kDegreeSymbol: String = "°F"
-    
+    public static let kMPH: String = "mph"
     
     public static let kInternalError: String = "Internal Error"
     public static let kPleaseTryAgainLater: String = "Please try again later"

@@ -32,7 +32,7 @@ extension CurrentForecastRow {
         
         var wind: String? {
             if let wind = cityCurrentData.currentData.wind?.speed {
-                return "Wind: \(Int(wind))mph"
+                return "Wind: \(Int(wind))\(AppConstants.kMPH)"
             }
             return nil
         }
