@@ -16,6 +16,7 @@ extension AddCityView {
         
         private let googlePlaceDataManager = GooglePlacesDataManager()
         private let weatherDataManager = CityWeatherDataManager()
+        var managedObjectContext = PersistenceController.shared.container.viewContext
         
         func updateSearchResults(value: String) async {
             if !value.isEmpty {
@@ -27,6 +28,25 @@ extension AddCityView {
             } else {
                 searchResults = []
             }
+        }
+        
+        func addCityToAppStorage(city: CityData?) {
+            if let city = city {
+                let newCity = City(context: managedObjectContext)
+                newCity.id = UUID()
+                newCity.name = city.name
+                newCity.lat = city.lat
+                newCity.lon = city.lon
+
+                PersistenceController.shared.save()
+            }
+        }
+        
+        func getCityDataForSelectedCityString(_ result: String, completion: @escaping (() -> Void)) async {
+            await weatherDataManager.getCityDataFromCityNameString(cityString:result, completion: { city in
+                self.addCityToAppStorage(city: city)
+                completion()
+            })
         }
     }
 }

@@ -9,9 +9,7 @@ import SwiftUI
 
 struct CityListView: View {
     
-    @Environment(\.managedObjectContext) var context
     @FetchRequest(sortDescriptors: [SortDescriptor(\.name)]) var storedCities: FetchedResults<City>
-    
     @StateObject var viewModel = ViewModel()
     
     var body: some View {
@@ -33,7 +31,11 @@ struct CityListView: View {
                         Text(cityName)
                     }
                 }
-                .onDelete(perform: deleteCityFromStorage)
+                .onDelete(perform: { offsets in
+                    for offset in offsets {
+                        viewModel.deleteCityFromStorage(city: storedCities[offset])
+                    }
+                })
             }
         } else {
             Text(viewModel.kNoCities)
@@ -49,14 +51,6 @@ struct CityListView: View {
         .sheet(isPresented: $viewModel.showingDetail) {
             AddCityView()
         }
-    }
-    
-    private func deleteCityFromStorage(at offsets: IndexSet) {
-        for offset in offsets {
-            let city = storedCities[offset]
-            context.delete(city)
-        }
-        try? context.save()
     }
 }
 

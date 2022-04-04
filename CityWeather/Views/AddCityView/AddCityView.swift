@@ -9,12 +9,9 @@ import SwiftUI
 
 struct AddCityView: View {
     
-    @Environment(\.managedObjectContext) var context
     @Environment(\.presentationMode) var presentationMode
     
     @StateObject var viewModel = ViewModel()
-    
-    private let dataManager = CityWeatherDataManager()
     
     public init() {}
     
@@ -33,7 +30,11 @@ struct AddCityView: View {
                 ForEach(results, id: \.self) { result in
                     Button(result) {
                         Task.init {
-                            await self.getCityDataForSelectedCityString(result)
+                            await viewModel.getCityDataForSelectedCityString(result, completion: {
+                                DispatchQueue.main.async {
+                                    presentationMode.wrappedValue.dismiss()
+                                }
+                            })
                         }
                     }
                     .foregroundColor(Color.black)
@@ -46,27 +47,6 @@ struct AddCityView: View {
                 await viewModel.updateSearchResults(value: value)
             })
         })
-    }
-    
-    private func getCityDataForSelectedCityString(_ result:String) async {
-        await dataManager.getCityDataFromCityNameString(cityString:result, completion: { city in
-            self.addCityToAppStorage(city: city)
-            DispatchQueue.main.async {
-                presentationMode.wrappedValue.dismiss()
-            }
-        })
-    }
-    
-    private func addCityToAppStorage(city: CityData?) {
-        if let city = city {
-            let newCity = City(context: context)
-            newCity.id = UUID()
-            newCity.name = city.name
-            newCity.lat = city.lat
-            newCity.lon = city.lon
-
-            try? context.save()
-        }
     }
 }
 
