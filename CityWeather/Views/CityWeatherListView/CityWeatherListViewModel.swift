@@ -33,15 +33,16 @@ extension CityWeatherListView {
             }
         }
         
-        func fetchData(storedCities: FetchedResults<City>) async {
+        func fetchData(storedCities: FetchedResults<City>, shouldForce: Bool = false) async {
             for city in storedCities {
-                if let cityId = city.id,
-                   currentCityWeatherData[cityId] == nil {
-                    let currentWeatherData = await dataManager.getCityCurrentWeatherDataFromCoordinates(city: city)
-                    let hourlyWeatherData = await dataManager.getCityHourlyWeatherDataFromCoordinates(city: city)
-                    DispatchQueue.main.async {
-                        self.currentCityWeatherData[cityId] = currentWeatherData
-                        self.hourlyCityWeatherData[cityId] = hourlyWeatherData
+                if let cityId = city.id {
+                    if (shouldForce || (currentCityWeatherData[cityId] == nil && hourlyCityWeatherData[cityId] == nil)) {
+                        let currentWeatherData = await dataManager.getCityCurrentWeatherDataFromCoordinates(city: city)
+                        let hourlyWeatherData = await dataManager.getCityHourlyWeatherDataFromCoordinates(city: city)
+                        DispatchQueue.main.async {
+                            self.currentCityWeatherData[cityId] = currentWeatherData
+                            self.hourlyCityWeatherData[cityId] = hourlyWeatherData
+                        }
                     }
                 }
             }
