@@ -23,9 +23,9 @@ struct CurrentForecastRow: View {
                 Spacer()
                 
                 VStack {
-                    windLabel
-                    
                     tempLabel
+                    
+                    windLabel
                 }
             }
         })

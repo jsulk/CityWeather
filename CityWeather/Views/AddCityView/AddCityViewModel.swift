@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 extension AddCityView {
     
@@ -13,18 +14,33 @@ extension AddCityView {
         
         @Published var searchResults: [String]?
         @Published var input: String = ""
+        @Published private(set) var activeError: LocalizedError?
         
         private let googlePlaceDataManager = GooglePlacesDataManager()
         private let weatherDataManager = CityWeatherDataManager()
         var managedObjectContext = PersistenceController.shared.container.viewContext
         
+        var isPresentingAlert: Binding<Bool> {
+            return Binding<Bool>(get: {
+                return self.activeError != nil
+            }, set: { newValue in
+                guard !newValue else { return }
+                self.activeError = nil
+            })
+        }
+        
         func updateSearchResults(value: String) async {
             if !value.isEmpty {
                 searchResults = []
-                let newResults = await googlePlaceDataManager.getSearchResults(input: input)
-                DispatchQueue.main.async {
-                    self.searchResults = newResults
-                }
+                await googlePlaceDataManager.getSearchResults(input: input, completion: { results, error in
+                    DispatchQueue.main.async {
+                        if let error = error {
+                            self.activeError = error
+                        } else {
+                            self.searchResults = results
+                        }
+                    }
+                })
             } else {
                 searchResults = []
             }
@@ -43,9 +59,15 @@ extension AddCityView {
         }
         
         func getCityDataForSelectedCityString(_ result: String, completion: @escaping (() -> Void)) async {
-            await weatherDataManager.getCityDataFromCityNameString(cityString:result, completion: { city in
-                self.addCityToAppStorage(city: city)
-                completion()
+            await weatherDataManager.getCityDataFromCityNameString(cityString:result, completion: { city, error in
+                DispatchQueue.main.async {
+                    if let error = error {
+                        self.activeError = error
+                    } else {
+                        self.addCityToAppStorage(city: city)
+                    }
+                    completion()
+                }
             })
         }
     }

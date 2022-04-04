@@ -13,10 +13,17 @@ struct GooglePlacesDataManager {
     fileprivate let kTypesQuery: String = "&types=geocode&key="
     fileprivate let kAPIKey: String = "AIzaSyDG4M12mjJTHkZgbCIZuBxEIwNPAYoaGKE"
     
-    public func getSearchResults(input: String) async -> [String]? {
+    public func getSearchResults(input: String, completion: @escaping ([String]?, LocalizedError?) -> Void) async  {
         if !input.isEmpty {
-            guard let formattedInput = input.formatAsURL() else { return nil }
-            guard let url = URL(string: "\(kGooglePlaceBaseURL)\(formattedInput)\(kTypesQuery)\(kAPIKey)") else { return nil }
+            
+            guard let formattedInput = input.formatAsURL(),
+                  let url = URL(string: "\(kGooglePlaceBaseURL)\(formattedInput)\(kTypesQuery)\(kAPIKey)")
+            else {
+                NSLog(AppError.formatting.errorTitle ?? "")
+                completion(nil, AppError.formatting)
+                return
+            }
+            
             do {
                 let (data, _) = try await URLSession.shared.data(from: url)
                 if let results = try? JSONDecoder().decode(SearchResults.self, from: data) {
@@ -24,15 +31,17 @@ struct GooglePlacesDataManager {
                     for result in results.predictions {
                         searchResults.append(result.structured_formatting.main_text)
                     }
-                    return searchResults
+                    return completion(searchResults, nil)
                 } else {
-                    //Couldn't parse response
-                    print("FAILED")
+                    NSLog(AppError.parsing.errorTitle ?? "")
+                    completion(nil, AppError.parsing)
                 }
             } catch {
-                print("INVALID DATA")
+                NSLog(AppError.network.errorTitle ?? "")
+                completion(nil, AppError.network)
             }
         }
-        return nil
+        NSLog(AppError.network.errorTitle ?? "")
+        completion(nil, AppError.network)
     }
 }

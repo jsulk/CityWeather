@@ -9,14 +9,13 @@ import SwiftUI
 
 struct CityWeatherListView: View {
     
-    @Environment(\.managedObjectContext) var context
     @FetchRequest(sortDescriptors: [SortDescriptor(\.name)]) var storedCities: FetchedResults<City>
     
     @StateObject var viewModel = ViewModel()
     
     var body: some View {
         NavigationView {
-            VStack(spacing: 0) {
+            VStack {
                 citiesListView
                 
                 segmentedTab
@@ -30,6 +29,9 @@ struct CityWeatherListView: View {
             .toolbar {
                 self.navigationButton
             }
+            .alert(isPresented: viewModel.isPresentingAlert, content: {
+                Alert(localizedError: viewModel.activeError!)
+            })
         }
         .accentColor(AppConstants.Colors.accentColor)
     }
