@@ -18,21 +18,44 @@ struct CityWeatherDetailView: View {
     
     var body: some View {
         weatherDataDetailList
-        LottieView(animationName: viewModel.animationName,
-                           loopMode: .loop,
-                           contentMode: .scaleAspectFit)
+        
+        animationView
     }
     
     @ViewBuilder
     private var weatherDataDetailList: some View {
-        if let currentWeather = self.viewModel.cityCurrentData.currentData.main
-        {
-            List {
-                Text("Current Temp: \(Int(currentWeather.temp ?? 0))°")
-                Text("Feels Like: \(Int(currentWeather.feels_like ?? 0))°")
-                Text("Low/High: \(Int(currentWeather.temp_min ?? 0))°-\(Int(currentWeather.temp_max ?? 0))°")
-            }
-            .navigationTitle(self.viewModel.cityName)
+        List {
+            currentWeatherSection
+            
+            forecastWeatherSection
+        }
+        .navigationTitle(self.viewModel.cityName)
+    }
+    
+    @ViewBuilder
+    private var animationView: some View {
+        LottieView(animationName: viewModel.animationName,
+                           loopMode: .loop,
+                           contentMode: .scaleAspectFit)
+        .frame(height: viewModel.kAnimationHeight)
+    }
+    
+    @ViewBuilder
+    private var currentWeatherSection: some View {
+        Section(header: Text(viewModel.kCurrentWeather)) {
+            Text(viewModel.currentTemp)
+            Text(viewModel.currentFeelsLike)
+            Text(viewModel.currentLowHigh)
+            Text(viewModel.currentWind)
+        }
+    }
+    
+    @ViewBuilder
+    private var forecastWeatherSection: some View {
+        Section(header: Text(viewModel.hourlyHeader)) {
+            Text(viewModel.hourlyTemp)
+            Text(viewModel.hourlyFeelsLike)
+            Text(viewModel.hourlyWind)
         }
     }
 }

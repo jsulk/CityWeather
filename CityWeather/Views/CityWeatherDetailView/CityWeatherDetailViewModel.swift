@@ -6,20 +6,25 @@
 //
 
 import Foundation
+import SwiftUI
 
 extension CityWeatherDetailView {
     class ViewModel: ObservableObject {
         var cityCurrentData: CityCurrentData
         var cityHourlyData: CityHourlyData
         
+        let kCurrentWeather = "CURRENT WEATHER"
+        let kForecast = "FORECAST"
+        let kTemp = "Current temp:"
+        let kFeelsLike = "Feels Like:"
+        let kLowHigh = "Low/High:"
+        let kWind = "Wind:"
+        let kAnimationHeight: CGFloat = 100
+        
         public init(cityCurrentData: CityCurrentData, cityHourlyData: CityHourlyData)
         {
             self.cityCurrentData = cityCurrentData
             self.cityHourlyData = cityHourlyData
-        }
-        
-        var cityName: String {
-            self.cityCurrentData.cityName
         }
         
         var animationName: String {
@@ -29,6 +34,63 @@ extension CityWeatherDetailView {
             } else {
                 return "cold"
             }
+        }
+        
+        private var currentWeather: WeatherData {
+            return cityCurrentData.currentData
+        }
+        
+        private var hourlyWeather: WeatherData {
+            return cityHourlyData.hourlyData.list[0]
+        }
+        
+        var cityName: String {
+            self.cityCurrentData.cityName
+        }
+        
+        var currentTemp: String {
+            return "\(kTemp) \(Int(currentWeather.main?.temp ?? 0))\(AppConstants.kDegreeSymbol)"
+        }
+        
+        var currentFeelsLike: String {
+            return "\(kFeelsLike) \(Int(currentWeather.main?.feels_like ?? 0))\(AppConstants.kDegreeSymbol)"
+        }
+        
+        var currentLowHigh: String {
+            return "\(kLowHigh) \(currentHigh)-\(currentLow)"
+        }
+        
+        var currentHigh: String {
+            return "\(Int(currentWeather.main?.temp_min ?? 0))\(AppConstants.kDegreeSymbol)"
+        }
+        
+        var currentLow: String {
+            return "\(Int(currentWeather.main?.temp_max ?? 0))\(AppConstants.kDegreeSymbol)"
+        }
+        
+        var currentWind: String {
+            return "\(kWind) \(Int(currentWeather.wind?.speed ?? 0))\(AppConstants.kMPH)"
+        }
+        
+        var hourlyHeader: String {
+            if let dateString = currentWeather.dt_txt,
+               let timeString = DateFormatter.convertDateTimeToString(dateString: dateString) {
+                return "\(kForecast) FOR \(timeString)"
+            } else {
+                return kForecast
+            }
+        }
+        
+        var hourlyTemp: String {
+            return "\(kTemp) \(Int(hourlyWeather.main?.temp ?? 0))\(AppConstants.kDegreeSymbol)"
+        }
+        
+        var hourlyFeelsLike: String {
+            return "\(kFeelsLike) \(Int(hourlyWeather.main?.feels_like ?? 0))\(AppConstants.kDegreeSymbol)"
+        }
+        
+        var hourlyWind: String {
+            return "\(kWind) \(Int(hourlyWeather.wind?.speed ?? 0))\(AppConstants.kMPH)"
         }
     }
 }
