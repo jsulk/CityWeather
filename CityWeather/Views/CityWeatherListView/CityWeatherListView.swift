@@ -51,7 +51,7 @@ struct CityWeatherListView: View {
             listViewOverlay
         })
         .refreshable {
-            await viewModel.fetchData(storedCities: storedCities)
+            await viewModel.fetchData(storedCities: storedCities, shouldForce: true)
         }
     }
     
