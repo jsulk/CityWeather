@@ -14,6 +14,7 @@
 		DE3006BF27FA5B4F00ACA8E0 /* cold.json in Resources */ = {isa = PBXBuildFile; fileRef = DE3006BE27FA5B4F00ACA8E0 /* cold.json */; };
 		DE3006C327FA975800ACA8E0 /* PersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE3006C227FA975800ACA8E0 /* PersistenceController.swift */; };
 		DE3006C527FB426B00ACA8E0 /* AlertExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE3006C427FB426B00ACA8E0 /* AlertExtensions.swift */; };
+		DE3006C72803FB5300ACA8E0 /* Decoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE3006C62803FB5300ACA8E0 /* Decoder.swift */; };
 		DE631EB827F93544008CD844 /* CityWeatherApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE631EB727F93544008CD844 /* CityWeatherApp.swift */; };
 		DE631EBA27F93544008CD844 /* CityWeatherListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE631EB927F93544008CD844 /* CityWeatherListView.swift */; };
 		DE631EBC27F93547008CD844 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DE631EBB27F93547008CD844 /* Assets.xcassets */; };
@@ -63,6 +64,7 @@
 		DE3006BE27FA5B4F00ACA8E0 /* cold.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = cold.json; sourceTree = "<group>"; };
 		DE3006C227FA975800ACA8E0 /* PersistenceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceController.swift; sourceTree = "<group>"; };
 		DE3006C427FB426B00ACA8E0 /* AlertExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertExtensions.swift; sourceTree = "<group>"; };
+		DE3006C62803FB5300ACA8E0 /* Decoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Decoder.swift; sourceTree = "<group>"; };
 		DE631EB427F93544008CD844 /* CityWeather.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CityWeather.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DE631EB727F93544008CD844 /* CityWeatherApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityWeatherApp.swift; sourceTree = "<group>"; };
 		DE631EB927F93544008CD844 /* CityWeatherListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityWeatherListView.swift; sourceTree = "<group>"; };
@@ -220,6 +222,7 @@
 				DED763C827FA1AFD008F5548 /* DateFormatterExtensions.swift */,
 				DE0200D527FA59DA00BDC0EF /* LottieView.swift */,
 				DE3006C427FB426B00ACA8E0 /* AlertExtensions.swift */,
+				DE3006C62803FB5300ACA8E0 /* Decoder.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -489,6 +492,7 @@
 				DE631ED327F954E1008CD844 /* CityListView.swift in Sources */,
 				DED763D627FA4844008F5548 /* CityListViewModel.swift in Sources */,
 				DED763D927FA4B44008F5548 /* AddCityViewModel.swift in Sources */,
+				DE3006C72803FB5300ACA8E0 /* Decoder.swift in Sources */,
 				DE631EFF27FA15C2008CD844 /* CityWeatherData.swift in Sources */,
 				DED763C927FA1AFD008F5548 /* DateFormatterExtensions.swift in Sources */,
 				DE631EDE27F9F33F008CD844 /* SearchResults.swift in Sources */,

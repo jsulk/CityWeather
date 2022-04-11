@@ -8,11 +8,11 @@
 import SwiftUI
 
 enum AppError: LocalizedError {
-    case formatting, network, parsing
+    case formatting, network, parsing, internalApp
     
     var errorTitle: String? {
         switch self {
-        case .formatting, .parsing:
+        case .formatting, .parsing, .internalApp:
             return AppConstants.kInternalError
         case .network:
             return AppConstants.kNetworkError
@@ -21,7 +21,7 @@ enum AppError: LocalizedError {
     
     var errorDescription: String? {
         switch self {
-        case .formatting, .network, .parsing:
+        case .formatting, .network, .parsing, .internalApp:
             return AppConstants.kPleaseTryAgainLater
         }
     }

@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import Combine
 
 extension AddCityView {
     
@@ -19,6 +20,7 @@ extension AddCityView {
         private let googlePlaceDataManager = GooglePlacesDataManager()
         private let weatherDataManager = CityWeatherDataManager()
         var managedObjectContext = PersistenceController.shared.container.viewContext
+        private var cancellables = Set<AnyCancellable>()
         
         var isPresentingAlert: Binding<Bool> {
             return Binding<Bool>(get: {
@@ -27,23 +29,6 @@ extension AddCityView {
                 guard !newValue else { return }
                 self.activeError = nil
             })
-        }
-        
-        func updateSearchResults(value: String) async {
-            if !value.isEmpty {
-                searchResults = []
-                await googlePlaceDataManager.getSearchResults(input: input, completion: { results, error in
-                    DispatchQueue.main.async {
-                        if let error = error {
-                            self.activeError = error
-                        } else {
-                            self.searchResults = results
-                        }
-                    }
-                })
-            } else {
-                searchResults = []
-            }
         }
         
         func addCityToAppStorage(city: CityData?) {
@@ -58,17 +43,61 @@ extension AddCityView {
             }
         }
         
-        func getCityDataForSelectedCityString(_ result: String, completion: @escaping (() -> Void)) async {
-            await weatherDataManager.getCityDataFromCityNameString(cityString:result, completion: { city, error in
-                DispatchQueue.main.async {
-                    if let error = error {
-                        self.activeError = error
-                    } else {
-                        self.addCityToAppStorage(city: city)
-                    }
-                    completion()
-                }
-            })
+        func updateSearchResults(value: String) async {
+            if !value.isEmpty {
+                searchResults = []
+                googlePlaceDataManager.getSearchResults(input: input)
+                    .receive(on: DispatchQueue.main)
+                    .sink(
+                        receiveCompletion: { [weak self] value in
+                            guard let self = self else { return }
+                            switch value {
+                            case .failure:
+                                self.activeError = AppError.network
+                            case .finished:
+                                break
+                            }
+                        },
+                        receiveValue: { [weak self] (results: SearchResults) in
+                            if let self = self {
+                                var searchResults = [String]()
+                                for result in results.predictions {
+                                    searchResults.append(result.structured_formatting.main_text)
+                                }
+                                self.searchResults = searchResults
+                            }
+                        })
+                    .store(in: &cancellables)
+            } else {
+                searchResults = []
+            }
+        }
+        
+        func getCityDataForSelectedCityString(_ result: String, completion: @escaping (() -> Void)) {
+            weatherDataManager.getCityDataFromCityNameString(cityString: result)
+                .receive(on: DispatchQueue.main)
+                .sink(
+                    receiveCompletion: { [weak self] value in
+                        guard let self = self else { return }
+                        switch value {
+                        case .failure:
+                            self.activeError = AppError.network
+                        case .finished:
+                            break
+                        }
+                    },
+                    receiveValue: { [weak self] (cityData: [CityData]) in
+                        if let self = self {
+                            if !cityData.isEmpty {
+                                self.addCityToAppStorage(city: cityData[0])
+                            } else {
+                                self.activeError = AppError.network
+                            }
+                            completion()
+                        }
+                        
+                    })
+                .store(in: &cancellables)
         }
     }
 }

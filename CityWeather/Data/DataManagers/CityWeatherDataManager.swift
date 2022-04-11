@@ -6,93 +6,61 @@
 //
 
 import Foundation
+import Combine
 
-public struct CityWeatherDataManager {
+public class CityWeatherDataManager {
     
     fileprivate let kBaseWeatherEndpoint: String = "https://api.openweathermap.org/data/2.5/"
     fileprivate let kBaseWeatherDataURL: String = "https://api.openweathermap.org/geo/1.0/direct?q="
     fileprivate let kAPIKey: String = "e1c77c38575299ac5173f878ef44ac6a"
     
-    func getCityCurrentWeatherDataFromCoordinates(city: City, completion: @escaping (CityCurrentData?, LocalizedError?) -> Void) async {
+    private let decoder = Decoder()
+    
+    func getCityCurrentWeatherDataFromCoordinates(city: City) -> AnyPublisher<WeatherData, Error> {
         let kCurrentWeatherBaseURL: String = "\(kBaseWeatherEndpoint)weather?lat="
-        guard let url = URL(string: "\(kCurrentWeatherBaseURL)\(city.lat)&lon=\(city.lon)&appid=\(kAPIKey)&units=imperial")
-        else {
-            NSLog(AppError.formatting.errorTitle ?? "")
-            completion(nil, AppError.formatting)
-            return
+        guard let url = URL(string: "\(kCurrentWeatherBaseURL)\(city.lat)&lon=\(city.lon)&appid=\(kAPIKey)&units=imperial") else {
+            return Fail(error: AppConstants.badURLError).eraseToAnyPublisher()
         }
-        do {
-            let (data, _) = try await URLSession.shared.data(from: url)
-            if let weatherData = try? JSONDecoder().decode(WeatherData.self, from: data) {
-                if let cityName = city.name {
-                    let weatherData = CityCurrentData(cityName: cityName, currentData: WeatherData(weather: weatherData.weather, main: weatherData.main, wind: weatherData.wind))
-                    completion(weatherData, nil)
-                }
-            } else {
-                NSLog(AppError.parsing.errorTitle ?? "")
-                completion(nil, AppError.parsing)
+        return URLSession.shared.dataTaskPublisher(for: URLRequest(url: url))
+            .mapError { error in
+                error
             }
-        } catch {
-            NSLog(AppError.network.errorTitle ?? "")
-            completion(nil, AppError.network)
-        }
+            .flatMap(maxPublishers: .max(1)) { pair in
+                self.decoder.decode(pair.data)
+            }
+            .eraseToAnyPublisher()
     }
     
-    public func getCityHourlyWeatherDataFromCoordinates(city: City, completion: @escaping (CityHourlyData?, LocalizedError?) -> Void) async {
+    func getCityHourlyWeatherDataFromCoordinates(city: City) -> AnyPublisher<HourlyWeatherData, Error> {
         let kHourlyWeatherBaseURL: String = "\(kBaseWeatherEndpoint)forecast?lat="
         guard let url = URL(string: "\(kHourlyWeatherBaseURL)\(city.lat)&lon=\(city.lon)&appid=\(kAPIKey)&units=imperial")
         else {
-            completion(nil, AppError.formatting)
-            return
+            return Fail(error: AppConstants.badURLError).eraseToAnyPublisher()
         }
-        do {
-            let (data, _) = try await URLSession.shared.data(from: url)
-            if let weatherData = try? JSONDecoder().decode(HourlyWeatherData.self, from: data) {
-                if let cityName = city.name {
-                    let weatherData = CityHourlyData(cityName: cityName, hourlyData: HourlyWeatherData(list: weatherData.list))
-                    completion(weatherData, nil)
-                }
-            } else {
-                NSLog(AppError.parsing.errorTitle ?? "")
-                completion(nil, AppError.parsing)
+        return URLSession.shared.dataTaskPublisher(for: URLRequest(url: url))
+            .mapError { error in
+                error
             }
-        } catch {
-            NSLog(AppError.network.errorTitle ?? "")
-            completion(nil, AppError.network)
-        }
-    }
-
-    func getCityDataFromCityNameString(cityString: String, completion: @escaping (CityData?, LocalizedError?) -> Void) async {
-        
-        guard let formattedCityString = cityString.formatAsURL() else {
-            NSLog(AppError.formatting.errorTitle ?? "")
-            completion(nil, AppError.formatting)
-            return
-        }
-        let urlString: String = "\(kBaseWeatherDataURL)\(formattedCityString)&limit=5&appid=\(kAPIKey)"
-        guard let url = URL(string: urlString) else { return }
-       
-        do {
-            let (data, _) = try await URLSession.shared.data(from: url)
-            if let cityData = try?
-                JSONDecoder().decode([CityData].self, from: data) {
-                if !cityData.isEmpty {
-                    let city = cityData[0]
-
-                    completion(city, nil)
-
-                } else {
-                    NSLog(AppError.parsing.errorTitle ?? "")
-                    completion(nil, AppError.parsing)
-                }
-            } else {
-                NSLog(AppError.network.errorTitle ?? "")
-                completion(nil, AppError.network)
+            .flatMap(maxPublishers: .max(1)) { pair in
+                self.decoder.decode(pair.data)
             }
-        } catch {
-            NSLog(AppError.network.errorTitle ?? "")
-            completion(nil, AppError.network)
-        }
+            .eraseToAnyPublisher()
     }
     
+    func getCityDataFromCityNameString(cityString: String) -> AnyPublisher<[CityData], Error> {
+        
+        guard let formattedCityString = cityString.formatAsURL(),
+              let url = URL(string: "\(kBaseWeatherDataURL)\(formattedCityString)&limit=5&appid=\(kAPIKey)") else {
+            return Fail(error: AppConstants.badURLError).eraseToAnyPublisher()
+        }
+        
+        return URLSession.shared.dataTaskPublisher(for: URLRequest(url: url))
+            .mapError { error in
+                error
+            }
+            .flatMap(maxPublishers: .max(1)) { pair in
+                self.decoder.decode(pair.data)
+            }
+            .eraseToAnyPublisher()
+    }
 }

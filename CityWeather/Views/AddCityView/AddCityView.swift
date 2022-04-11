@@ -33,7 +33,7 @@ struct AddCityView: View {
                 ForEach(results, id: \.self) { result in
                     Button(result) {
                         Task.init {
-                            await viewModel.getCityDataForSelectedCityString(result, completion: {
+                            viewModel.getCityDataForSelectedCityString(result, completion: {
                                 DispatchQueue.main.async {
                                     presentationMode.wrappedValue.dismiss()
                                 }

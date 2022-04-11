@@ -15,7 +15,7 @@ struct CityWeatherListView: View {
     
     var body: some View {
         NavigationView {
-            VStack {
+            VStack(spacing: 0) {
                 citiesListView
                 
                 segmentedTab
@@ -23,7 +23,7 @@ struct CityWeatherListView: View {
             .navigationTitle(viewModel.navTitle)
             .onAppear {
                 Task.init {
-                    await viewModel.fetchData(storedCities: storedCities)
+                    viewModel.fetchData(storedCities: storedCities)
                 }
             }
             .toolbar {
@@ -40,12 +40,13 @@ struct CityWeatherListView: View {
     private var citiesListView: some View {
         List(storedCities) { city in
             if let cityId =  city.id,
-               let currentCityData = viewModel.currentCityWeatherData[cityId],
-               let hourlyCityData = viewModel.hourlyCityWeatherData[cityId] {
+               let cityName = city.name {
+                let currentCityData = viewModel.currentCityWeatherData[cityId]
+                let hourlyCityData = viewModel.hourlyCityWeatherData[cityId]
                 if viewModel.isShowingCurrentForecast {
-                    CurrentForecastRow(model: CurrentForecastRow.ViewModel(cityCurrentData: currentCityData, cityHourlyData: hourlyCityData))
+                    CurrentForecastRow(model: CurrentForecastRow.ViewModel(cityName: cityName, cityCurrentData: currentCityData, cityHourlyData: hourlyCityData))
                 } else {
-                    HourlyForecastRow(model: HourlyForecastRow.ViewModel(cityCurrentData: currentCityData, cityHourlyData: hourlyCityData))
+                    HourlyForecastRow(model: HourlyForecastRow.ViewModel(cityName: cityName, cityCurrentData: currentCityData, cityHourlyData: hourlyCityData))
                 }
             }
         }
@@ -53,7 +54,7 @@ struct CityWeatherListView: View {
             listViewOverlay
         })
         .refreshable {
-            await viewModel.fetchData(storedCities: storedCities, shouldForce: true)
+            viewModel.fetchData(storedCities: storedCities, shouldForce: true)
         }
     }
     
