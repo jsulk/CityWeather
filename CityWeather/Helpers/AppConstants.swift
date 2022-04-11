@@ -19,4 +19,6 @@ public struct AppConstants {
     public static let kInternalError: String = "Internal Error"
     public static let kPleaseTryAgainLater: String = "Please try again later"
     public static let kNetworkError: String = "Network Error"
+    
+    public static let rowHeight: CGFloat = 40
 }
