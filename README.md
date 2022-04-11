@@ -42,6 +42,7 @@ Add City Screen
 # Getting Started
 ## Dependencies
 Cocoapods 
+- pod 'lottie-ios'
 
 # Installing
 CityWeather master branch
