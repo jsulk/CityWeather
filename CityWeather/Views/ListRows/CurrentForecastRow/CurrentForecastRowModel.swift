@@ -11,27 +11,33 @@ extension CurrentForecastRow {
     
     class ViewModel: ObservableObject {
         
-        var cityCurrentData: CityCurrentData
-        var cityHourlyData: CityHourlyData
+        var cityName: String
+        var cityCurrentData: CityCurrentData?
+        var cityHourlyData: CityHourlyData?
         
-        public init(cityCurrentData: CityCurrentData, cityHourlyData: CityHourlyData) {
+        public init(cityName: String, cityCurrentData: CityCurrentData?, cityHourlyData: CityHourlyData?) {
+            self.cityName = cityName
             self.cityCurrentData = cityCurrentData
             self.cityHourlyData = cityHourlyData
         }
         
-        var cityName: String {
-            self.cityCurrentData.cityName
+        var rowDisabled: Bool {
+            if self.cityCurrentData == nil || self.cityHourlyData == nil {
+                return true
+            } else {
+                return false
+            }
         }
         
         var temp: String? {
-            if let temp = cityCurrentData.currentData.main?.temp {
+            if let temp = cityCurrentData?.currentData.main?.temp {
                 return "Temp: \(Int(temp))\(AppConstants.kDegreeSymbol)"
             }
             return nil
         }
         
         var wind: String? {
-            if let wind = cityCurrentData.currentData.wind?.speed {
+            if let wind = cityCurrentData?.currentData.wind?.speed {
                 return "Wind: \(Int(wind))\(AppConstants.kMPH)"
             }
             return nil
