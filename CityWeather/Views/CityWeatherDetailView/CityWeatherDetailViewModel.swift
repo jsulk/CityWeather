@@ -10,8 +10,9 @@ import SwiftUI
 
 extension CityWeatherDetailView {
     class ViewModel: ObservableObject {
-        var cityCurrentData: CityCurrentData
-        var cityHourlyData: CityHourlyData
+        var cityName: String
+        var cityCurrentData: WeatherData
+        var cityHourlyData: HourlyWeatherData
         
         let kCurrentWeather = "CURRENT WEATHER"
         let kForecast = "FORECAST"
@@ -21,14 +22,15 @@ extension CityWeatherDetailView {
         let kWind = "Wind:"
         let kAnimationHeight: CGFloat = 100
         
-        public init(cityCurrentData: CityCurrentData, cityHourlyData: CityHourlyData)
+        public init(cityName: String, cityCurrentData: WeatherData, cityHourlyData: HourlyWeatherData)
         {
+            self.cityName = cityName
             self.cityCurrentData = cityCurrentData
             self.cityHourlyData = cityHourlyData
         }
         
         var animationName: String {
-            guard let temp = cityCurrentData.currentData.main?.temp else { return "" }
+            guard let temp = cityCurrentData.main?.temp else { return "" }
             if Int(temp) > 60 {
                 return "hot"
             } else {
@@ -37,15 +39,11 @@ extension CityWeatherDetailView {
         }
         
         private var currentWeather: WeatherData {
-            return cityCurrentData.currentData
+            return cityCurrentData
         }
         
         private var hourlyWeather: WeatherData {
-            return cityHourlyData.hourlyData.list[0]
-        }
-        
-        var cityName: String {
-            self.cityCurrentData.cityName
+            return cityHourlyData.list[0]
         }
         
         var currentTemp: String {

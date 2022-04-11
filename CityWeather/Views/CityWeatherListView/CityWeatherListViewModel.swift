@@ -12,8 +12,8 @@ extension CityWeatherListView {
     class ViewModel: ObservableObject {
         
         @Published var isShowingCurrentForecast: Bool = true
-        @Published var currentCityWeatherData: [UUID:CityCurrentData] = [:]
-        @Published var hourlyCityWeatherData: [UUID:CityHourlyData] = [:]
+        @Published var currentCityWeatherData: [UUID:WeatherData] = [:]
+        @Published var hourlyCityWeatherData: [UUID:HourlyWeatherData] = [:]
         @Published private(set) var activeError: LocalizedError?
         
         private let dataManager = CityWeatherDataManager()
