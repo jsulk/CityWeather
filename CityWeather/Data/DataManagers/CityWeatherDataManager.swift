@@ -13,7 +13,7 @@ public struct CityWeatherDataManager {
     fileprivate let kBaseWeatherDataURL: String = "https://api.openweathermap.org/geo/1.0/direct?q="
     fileprivate let kAPIKey: String = "e1c77c38575299ac5173f878ef44ac6a"
     
-    func getCityCurrentWeatherDataFromCoordinates(city: City, completion: @escaping (CityCurrentData?, LocalizedError?) -> Void) async {
+    func getCityCurrentWeatherDataFromCoordinates(city: City, completion: @escaping (WeatherData?, LocalizedError?) -> Void) async {
         let kCurrentWeatherBaseURL: String = "\(kBaseWeatherEndpoint)weather?lat="
         guard let url = URL(string: "\(kCurrentWeatherBaseURL)\(city.lat)&lon=\(city.lon)&appid=\(kAPIKey)&units=imperial")
         else {
@@ -23,11 +23,9 @@ public struct CityWeatherDataManager {
         }
         do {
             let (data, _) = try await URLSession.shared.data(from: url)
-            if let weatherData = try? JSONDecoder().decode(WeatherData.self, from: data) {
-                if let cityName = city.name {
-                    let weatherData = CityCurrentData(cityName: cityName, currentData: WeatherData(weather: weatherData.weather, main: weatherData.main, wind: weatherData.wind))
-                    completion(weatherData, nil)
-                }
+            if let data = try? JSONDecoder().decode(WeatherData.self, from: data) {
+                let weatherData = WeatherData(weather: data.weather, main: data.main, wind: data.wind)
+                completion(weatherData, nil)
             } else {
                 NSLog(AppError.parsing.errorTitle ?? "")
                 completion(nil, AppError.parsing)
@@ -38,7 +36,7 @@ public struct CityWeatherDataManager {
         }
     }
     
-    public func getCityHourlyWeatherDataFromCoordinates(city: City, completion: @escaping (CityHourlyData?, LocalizedError?) -> Void) async {
+    func getCityHourlyWeatherDataFromCoordinates(city: City, completion: @escaping (HourlyWeatherData?, LocalizedError?) -> Void) async {
         let kHourlyWeatherBaseURL: String = "\(kBaseWeatherEndpoint)forecast?lat="
         guard let url = URL(string: "\(kHourlyWeatherBaseURL)\(city.lat)&lon=\(city.lon)&appid=\(kAPIKey)&units=imperial")
         else {
@@ -48,10 +46,8 @@ public struct CityWeatherDataManager {
         do {
             let (data, _) = try await URLSession.shared.data(from: url)
             if let weatherData = try? JSONDecoder().decode(HourlyWeatherData.self, from: data) {
-                if let cityName = city.name {
-                    let weatherData = CityHourlyData(cityName: cityName, hourlyData: HourlyWeatherData(list: weatherData.list))
-                    completion(weatherData, nil)
-                }
+                let weatherData =  HourlyWeatherData(list: weatherData.list)
+                completion(weatherData, nil)
             } else {
                 NSLog(AppError.parsing.errorTitle ?? "")
                 completion(nil, AppError.parsing)

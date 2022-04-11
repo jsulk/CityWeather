@@ -35,13 +35,3 @@ struct Wind: Codable {
     var speed: Double?
     var deg: Int?
 }
-
-public struct CityCurrentData: Decodable {
-    var cityName: String
-    var currentData: WeatherData
-}
-
-public struct CityHourlyData: Decodable {
-    var cityName: String
-    var hourlyData: HourlyWeatherData
-}

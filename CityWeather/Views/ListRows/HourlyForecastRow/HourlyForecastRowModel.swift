@@ -12,10 +12,10 @@ extension HourlyForecastRow {
     class ViewModel: ObservableObject {
         
         var cityName: String
-        var cityCurrentData: CityCurrentData?
-        var cityHourlyData: CityHourlyData?
+        var cityCurrentData: WeatherData?
+        var cityHourlyData: HourlyWeatherData?
         
-        public init(cityName: String, cityCurrentData: CityCurrentData?, cityHourlyData: CityHourlyData?) {
+        public init(cityName: String, cityCurrentData: WeatherData?, cityHourlyData: HourlyWeatherData?) {
             self.cityName = cityName
             self.cityCurrentData = cityCurrentData
             self.cityHourlyData = cityHourlyData
@@ -30,7 +30,7 @@ extension HourlyForecastRow {
         }
         
         var futureTemp: String? {
-            if let futureForecaseTemp = cityHourlyData?.hourlyData.list[0].main?.temp {
+            if let futureForecaseTemp = cityHourlyData?.list[0].main?.temp {
                 return "\(Int(futureForecaseTemp))\(AppConstants.kDegreeSymbol)"
             } else {
                 return nil
@@ -38,7 +38,7 @@ extension HourlyForecastRow {
         }
         
         var convertedForecastTime: String? {
-            if let futureForecastTime = cityHourlyData?.hourlyData.list[0].dt_txt,
+            if let futureForecastTime = cityHourlyData?.list[0].dt_txt,
                let convertedForecastTime = DateFormatter.convertDateTimeToString(dateString: futureForecastTime) {
                 return convertedForecastTime
             } else {
